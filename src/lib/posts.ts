@@ -28,8 +28,15 @@ export function getSortedPostsData(): PostData[] {
         const fileContents = fs.readFileSync(fullPath, 'utf8');
         const matterResult = matter(fileContents);
 
+        // Process content for immediate display
+        const processedContent = remark()
+            .use(html)
+            .processSync(matterResult.content);
+        const contentHtml = processedContent.toString();
+
         return {
             id,
+            contentHtml,
             ...matterResult.data,
         } as PostData;
     });

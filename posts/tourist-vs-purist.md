@@ -1,7 +1,8 @@
 ---
-title: "TOURIST VS PURIST"
-date: "2025-11-20"
-description: "Navigating the landscape of culture and consumption."
+title: "Tourist vs Purist"
+date: "2025-01-10"
+description: "Navigating the landscape of culture and design consumption."
+category: "THEORY"
 ---
 
 Are you a tourist or a purist? 

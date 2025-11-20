@@ -1,7 +1,8 @@
 ---
-title: "FIGURES OF SPEECH"
-date: "2025-11-21"
-description: "A look into the design philosophy of the new era."
+title: "Figures of Speech"
+date: "2025-01-05"
+description: "A look into the design philosophy of Virgil Abloh's groundbreaking exhibition."
+category: "EXHIBITION"
 ---
 
 The core of the design is not about adding, but about revealing. 
