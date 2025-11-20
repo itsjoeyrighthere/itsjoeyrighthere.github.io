@@ -78,7 +78,7 @@ export default function Desktop({ posts }: { posts: Post[] }) {
 
                 {/* Hero Section */}
                 <div className="mb-12">
-                    <Marquee text='ARCHIVE 2025 — FIGURES OF SPEECH — ' />
+                    <Marquee />
                     <div className="text-center mt-16 mb-8">
                         <h1 className="text-[80px] md:text-[120px] font-bold leading-none tracking-tighter text-white text-stroke-black">
                             JOEY

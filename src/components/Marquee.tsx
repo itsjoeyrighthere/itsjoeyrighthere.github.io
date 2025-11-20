@@ -1,4 +1,42 @@
-export default function Marquee({ text }: { text: string }) {
+'use client';
+
+import { useState, useEffect } from 'react';
+
+export default function Marquee() {
+    const [displayTexts, setDisplayTexts] = useState<string[]>([]);
+
+    useEffect(() => {
+        const currentYear = new Date().getFullYear();
+
+        const texts = [
+            `OVERTHINKING EVERYTHING`,
+            `JOEY'S BRAIN DUMP`,
+            `SCROLL AT YOUR OWN RISK`,
+            `JUST THOUGHTS`,
+            `NOTHING SPECIAL`,
+            `JOEY ${currentYear}`,
+            `PROCRASTINATING IN STYLE`,
+            `RANDOM MUSINGS`,
+            `WELCOME TO THE CHAOS`,
+            `WHATEVER COMES TO MIND`,
+            `NO FILTER`,
+            `PROBABLY OVERTHINKING IT`,
+            `BRAIN.EXE RUNNING`,
+            `THOUGHTS ON LOOP`,
+            `CTRL+ALT+DELETE TO EXIT`,
+            `IDK JUST VIBING`,
+            `SOME STUFF I WROTE`,
+            `JOEY'S CORNER`
+        ];
+
+        // Shuffle the texts array
+        const shuffled = [...texts].sort(() => Math.random() - 0.5);
+        // Duplicate for seamless loop
+        setDisplayTexts([...shuffled, ...shuffled]);
+    }, []);
+
+    if (displayTexts.length === 0) return null;
+
     return (
         <div className="bg-[#ccff00] text-black py-2 overflow-hidden border-b border-black relative">
             {/* Dot Pattern Overlay */}
@@ -8,13 +46,10 @@ export default function Marquee({ text }: { text: string }) {
                 backgroundPosition: '30px 30px'
             }} />
 
-            <div className="animate-marquee whitespace-nowrap font-bold text-sm font-mono uppercase tracking-widest text-[#ff6600]">
-                <span className="mx-4">{text}</span>
-                <span className="mx-4">{text}</span>
-                <span className="mx-4">{text}</span>
-                <span className="mx-4">{text}</span>
-                <span className="mx-4">{text}</span>
-                <span className="mx-4">{text}</span>
+            <div className="flex animate-marquee-infinite whitespace-nowrap font-bold text-sm font-mono uppercase tracking-widest text-[#ff6600]">
+                {displayTexts.map((text, index) => (
+                    <span key={index} className="mx-4">— {text} —</span>
+                ))}
             </div>
         </div>
     );
