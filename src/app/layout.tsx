@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased bg-white text-black">
+      <body className="antialiased bg-white text-black" suppressHydrationWarning>
         <Header />
         <main className="pt-20 pb-20 min-h-screen flex flex-col items-center justify-center px-4">
           {children}
