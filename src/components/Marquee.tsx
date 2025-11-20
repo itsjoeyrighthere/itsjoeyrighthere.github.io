@@ -48,7 +48,10 @@ export default function Marquee() {
 
             <div className="flex animate-marquee-infinite whitespace-nowrap font-bold text-sm font-mono uppercase tracking-widest text-[#ff6600]">
                 {displayTexts.map((text, index) => (
-                    <span key={index} className="mx-4">— {text} —</span>
+                    <span key={index}>
+                        <span className="px-4">{text}</span>
+                        {index < displayTexts.length - 1 && <span className="px-2">—</span>}
+                    </span>
                 ))}
             </div>
         </div>
