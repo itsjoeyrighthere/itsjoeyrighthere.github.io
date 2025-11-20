@@ -3,6 +3,26 @@
 :root {
   --background: #ffffff;
   --foreground: #000000;
+  --neon-green: #ccff00;
+  --neon-orange: #ff6600;
+}
+
+.text-stroke {
+  -webkit-text-stroke: 1px black;
+  color: transparent;
+}
+
+.bg-neon-green {
+  background-color: var(--neon-green);
+}
+
+.text-neon-green {
+  color: var(--neon-green);
+}
+
+.hover-neon-green:hover {
+  background-color: var(--neon-green);
+  color: black;
 }
 
 body {
@@ -25,4 +45,33 @@ a:hover {
 /* Utility for raw borders if needed */
 .border-raw {
   border: 1px solid #000;
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee2 {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee2 {
+  animation: marquee2 25s linear infinite;
 }
