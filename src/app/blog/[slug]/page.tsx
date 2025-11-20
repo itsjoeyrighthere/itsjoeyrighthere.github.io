@@ -2,7 +2,9 @@ import { getAllPostIds, getPostData } from "@/lib/posts";
 
 export async function generateStaticParams() {
     const paths = getAllPostIds();
-    return paths;
+    return paths.map((path) => ({
+        slug: path.params.slug,
+    }));
 }
 
 export default async function Post({ params }: { params: Promise<{ slug: string }> }) {
