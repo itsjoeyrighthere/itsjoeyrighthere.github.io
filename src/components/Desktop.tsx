@@ -103,7 +103,7 @@ export default function Desktop({ posts }: { posts: Post[] }) {
                                 <span className="font-mono text-xs bg-black text-white px-1 uppercase">{post.category || 'ESSAY'}</span>
                             </div>
 
-                            <h2 className="text-3xl font-bold uppercase leading-tight mb-4 line-clamp-3 group-hover:text-[#ccff00] group-hover:bg-black transition-colors inline-block self-start">
+                            <h2 className="text-3xl font-bold uppercase leading-tight mb-4 line-clamp-3 group-hover:italic transition-all">
                                 "{post.title}"
                             </h2>
 
