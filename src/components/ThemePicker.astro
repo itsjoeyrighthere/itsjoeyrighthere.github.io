@@ -1,0 +1,13 @@
+---
+import { themes } from '../config/themes';
+---
+<section class="appearance-settings" data-theme-picker aria-labelledby="appearance-title">
+  <div class="appearance-caption"><h2 id="appearance-title" class="micro">阅读配色</h2><p>选一个舒服的颜色。</p></div>
+  <div class="theme-options" role="group" aria-label="网站配色方案">
+    {themes.map(theme => <button type="button" data-theme-option={theme.id} aria-pressed={theme.id === 'paper'} aria-label={`${theme.name}：${theme.description}`}>
+      <span class="theme-palette" style={`--swatch-bg:${theme.background};--swatch-ink:${theme.ink};--swatch-brand:${theme.brand}`} aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="theme-option-name">{theme.name}</span><span class="theme-selected" aria-hidden="true">✓</span>
+    </button>)}
+  </div>
+  <p class="appearance-hint micro" aria-live="polite">仅保存在此浏览器</p>
+</section>

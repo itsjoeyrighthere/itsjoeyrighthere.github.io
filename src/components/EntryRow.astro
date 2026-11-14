@@ -1,0 +1,12 @@
+---
+import { dateLabel, href, kinds, type Entry } from '../utils/content';
+interface Props { entry: Entry; index: number; }
+const { entry, index } = Astro.props;
+---
+<a class="entry-row" href={href(entry)} data-entry data-kind={entry.data.kind} data-title={[entry.data.title, ...entry.data.tags].join(" ").toLocaleLowerCase()}>
+  <span class="micro row-number">{String(index + 1).padStart(3, '0')}</span>
+  <div class="row-body"><h2>{entry.data.title}</h2><p>{entry.data.description}</p></div>
+  <span class="micro row-kind">{kinds[entry.data.kind]}</span>
+  <time class="micro row-date" datetime={entry.data.published.toISOString()}>{dateLabel(entry.data.published)}</time>
+  <span class="row-action micro">阅读</span>
+</a>

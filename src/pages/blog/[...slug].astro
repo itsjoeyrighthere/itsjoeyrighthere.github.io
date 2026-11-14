@@ -1,0 +1,8 @@
+---
+import { entries, href } from '../../utils/content';
+export async function getStaticPaths() {
+  return (await entries()).map(entry => ({ params: { slug: entry.id }, props: { target: href(entry) } }));
+}
+const { target } = Astro.props;
+---
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8" /><meta http-equiv="refresh" content={`0;url=${target}`} /><meta name="robots" content="noindex" /><link rel="canonical" href={new URL(target, Astro.site)} /><title>记录已迁移 — Joey</title></head><body><p>记录已迁移。<a href={target}>继续阅读</a></p></body></html>

@@ -1,0 +1,73 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import ThemePicker from '../components/ThemePicker.astro';
+import { themes } from '../config/themes';
+import '@fontsource/roboto/latin-900.css';
+import '@fontsource-variable/jetbrains-mono';
+import '../styles/site.css';
+interface Props {
+  title?: string;
+  description?: string;
+  light?: boolean;
+  article?: boolean;
+  lang?: string;
+  published?: Date;
+}
+const { title, description = 'Joey 的个人档案。文章、项目与日常记录，持续整理中。', light = false, article = false, lang = 'zh-CN', published } = Astro.props;
+const pageTitle = title ? `${title} — Joey` : 'Joey — Open archive';
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const current = Astro.url.pathname;
+---
+<!doctype html>
+<html lang={lang} data-theme-palettes={JSON.stringify(themes.map(({ id, background }) => ({ id, background })))}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="Joey — RSS" href="/rss.xml" />
+    <meta name="theme-color" content="#f5f4ed" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:site_name" content="Joey" />
+    <meta name="twitter:card" content="summary" />
+    {published && <meta property="article:published_time" content={published.toISOString()} />}
+    <ClientRouter />
+    <script is:inline data-astro-rerun>
+      (() => {
+        document.documentElement.classList.add('js');
+        const palettes = JSON.parse(document.documentElement.dataset.themePalettes || '[]');
+        let id = document.documentElement.dataset.theme || 'paper';
+        try { id = localStorage.getItem('joey-theme') || id; } catch {}
+        const palette = palettes.find(palette => palette.id === id) || palettes[0];
+        document.documentElement.dataset.theme = palette.id;
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', palette.background);
+      })();
+    </script>
+    <slot name="head" />
+  </head>
+  <body id="top" class:list={[{ 'paper-page': light }]}>
+    <a class="skip-link" href="#main">跳到正文</a>
+    <header class="site-header" data-pagefind-ignore>
+      <a class="wordmark" href="/" aria-label="Joey 首页">itsjoeyrighthere<small>PERSONAL RECORDS</small></a>
+      <div class="header-status micro"><span>OPEN ARCHIVE</span><span>文章 / 项目 / 随记</span></div>
+      <div class="header-rules" aria-hidden="true"></div>
+      <nav class="site-nav micro" aria-label="主导航">
+        <a href="/archive/" aria-current={current === '/archive/' ? 'page' : undefined}>INDEX / 索引</a>
+        <a href="/about/" aria-current={current === '/about/' ? 'page' : undefined}>ABOUT / 关于</a>
+        <a href="/rss.xml">RSS</a>
+      </nav>
+    </header>
+    <slot />
+    <footer class="site-footer" data-pagefind-ignore>
+      <div class="footer-identity"><span class="micro">AN OPEN PERSONAL SPACE</span><p>持续整理，保持好奇。</p></div>
+      <ThemePicker />
+      <div class="footer-meta micro"><span>PERSONAL ARCHIVE</span><div><a href="/about/">关于本站</a><a href="/rss.xml">RSS</a><a href="#top">回到顶部</a></div><span>A WORK IN PROGRESS</span></div>
+    </footer>
+    <script>import '../utils/site';</script>
+  </body>
+</html>

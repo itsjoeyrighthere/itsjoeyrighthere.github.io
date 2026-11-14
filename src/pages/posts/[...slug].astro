@@ -1,0 +1,43 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { entries, href, dateLabel, kinds, type Entry } from '../../utils/content';
+export async function getStaticPaths() {
+  const all = await entries();
+  return all.map((entry, index) => ({ params: { slug: entry.id }, props: { entry, newer: all[index - 1], older: all[index + 1] } }));
+}
+interface Props { entry: Entry; newer?: Entry; older?: Entry; }
+const { entry, newer, older } = Astro.props;
+const { Content, headings } = await render(entry);
+const toc = headings.filter(h => h.depth === 2 || h.depth === 3);
+const wordCount = (entry.body ?? '').split(/\s+/).filter(Boolean).length;
+const cjkCount = ((entry.body ?? '').match(/[\u3400-\u9fff]/g) || []).length;
+const minutes = Math.max(1, Math.ceil((wordCount + cjkCount) / 220));
+---
+<Base title={entry.data.title} description={entry.data.description} light article lang={entry.data.lang || 'zh-CN'} published={entry.data.published}>
+  <main id="main" class="post-page" data-pagefind-body>
+    <div class="reading-top micro" data-pagefind-ignore><a href="/archive/">回到索引</a><span>{kinds[entry.data.kind]} / {entry.data.category || 'RECORD'}</span><span>{minutes} MIN READ</span></div>
+    <header class="post-header">
+      <div class="post-dates micro"><time datetime={entry.data.published.toISOString()}>{dateLabel(entry.data.published)}</time>{entry.data.updated && <span>更新 {dateLabel(entry.data.updated)}</span>}</div>
+      <h1 data-pagefind-meta="title">{entry.data.title}</h1>
+      {entry.data.description && <p class="post-deck">{entry.data.description}</p>}
+      <div class="post-tags micro" data-pagefind-ignore>{entry.data.tags.map(tag => <a href={`/archive/?q=${encodeURIComponent(tag)}`}>#{tag}</a>)}</div>
+    </header>
+    <div class="reading-grid">
+      <aside class="reading-margin" data-pagefind-ignore>
+        <div class="micro">IN THIS RECORD</div>
+        {toc.length > 0 ? <nav aria-label="文章目录"><ol>{toc.map(h => <li class:list={[{ 'toc-sub': h.depth === 3 }]}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol></nav> : <p class="micro">一页记录，<br />慢慢读。</p>}
+      </aside>
+      <article class="prose">
+        {entry.data.image && <img class="post-cover" src={entry.data.image} alt={entry.data.imageAlt || entry.data.title} width="1200" height="750" />}
+        <Content />
+        {entry.data.external && <p><a href={entry.data.external} target="_blank" rel="noopener noreferrer">访问项目 <span aria-hidden="true">↗</span></a></p>}
+        <div class="end-mark" aria-label="文章结束">■</div>
+      </article>
+    </div>
+    <nav class="post-pagination" aria-label="相邻记录" data-pagefind-ignore>
+      <div>{newer ? <a href={href(newer)}><span class="micro">更新的记录</span><strong>{newer.data.title}</strong></a> : <a href="/archive/"><span class="micro">返回索引</span><strong>所有记录</strong></a>}</div>
+      <div>{older && <a href={href(older)}><span class="micro">更早的记录</span><strong>{older.data.title}</strong></a>}</div>
+    </nav>
+  </main>
+</Base>

@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import EntryRow from '../components/EntryRow.astro';
+import { entries, kinds } from '../utils/content';
+const all = await entries();
+---
+<Base title="记录索引" description="Joey 的全部文章、项目与随记。按分类浏览，或搜索内容。">
+  <main id="main" class="archive-page" data-archive>
+    <div class="page-kicker micro"><span>PERSONAL ARCHIVE / COMPLETE INDEX</span><span>{all.length} DOCUMENTS</span></div>
+    <h1 class="page-display">THE INDEX</h1>
+    {all.length > 0 && <div class="archive-tools">
+      <div class="filter-group" role="group" aria-label="内容分类">
+        <button data-filter="all" aria-pressed="true">全部 <span>{all.length}</span></button>
+        {Object.entries(kinds).map(([key, label]) => <button data-filter={key} aria-pressed="false">{label} <span>{all.filter(p => p.data.kind === key).length}</span></button>)}
+      </div>
+      <label class="title-search"><span class="micro">查找标题 / 标签</span><input type="search" id="title-search" placeholder="输入关键词…" autocomplete="off" /></label>
+    </div>}
+    <p class="archive-status micro" aria-live="polite" data-status>共 {all.length} 条记录 · 按时间倒序</p>
+    <div class="archive-list">{all.map((entry, index) => <EntryRow entry={entry} index={index} />)}</div>
+    <div class="archive-empty" data-empty hidden={all.length > 0}><span aria-hidden="true">∅</span><h2>这里暂时没有记录。</h2><p>{all.length ? '换个分类或关键词试试。' : '第一篇文章、第一次尝试，都从空白开始。'}</p>{all.length ? <button class="reset-filter text-link">查看全部记录</button> : <a href="/" class="text-link">回到首页</a>}</div>
+    {all.length > 0 && <section class="full-search" aria-labelledby="full-search-title">
+      <div class="section-bar micro"><h2 id="full-search-title">SEARCH THE CONTENT</h2><span>全文搜索</span></div>
+      <p class="search-intro">想找正文里的某句话？在这里搜索所有已公开记录。</p>
+      <div id="full-search"></div>
+      <p class="search-fallback micro" data-search-message aria-live="polite">全文搜索正在加载。上方的标题搜索始终可用。</p>
+      <noscript><p>启用 JavaScript 可使用搜索；也可以直接浏览上方的完整索引。</p></noscript>
+    </section>}
+  </main>
+
+</Base>

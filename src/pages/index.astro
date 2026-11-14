@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import EntryRow from '../components/EntryRow.astro';
+import { entries, dateLabel, href } from '../utils/content';
+const all = await entries();
+const writings = all.filter(p => p.data.kind === 'writing');
+const notes = all.filter(p => p.data.kind === 'note');
+const projects = all.filter(p => p.data.kind === 'project');
+const featured = writings[0];
+const latestNote = notes[0];
+const project = projects[0];
+---
+<Base>
+  <main id="main">
+    <section class="hero" aria-label="Joey 的个人档案">
+      <div class="hero-caption micro"><span>A PERSONAL RECORD, ALWAYS IN PROGRESS.</span><span>{all.length} DOCUMENTS / {all[0] ? dateLabel(all[0].data.updated ?? all[0].data.published) : 'NO ENTRIES YET'}</span></div>
+      <h1 class="hero-name">Joey<span class="hero-dot">.</span></h1>
+      <div class="hero-baseline"><p>一些想法，一些尝试。<br />把正在发生的过程留在这里。</p><span class="hero-category micro">WRITING<br />PROJECTS<br />NOTES TO SELF</span><span class="hero-scroll micro">向下翻阅<br /></span></div>
+      <a class="index-sheet" href="/archive/" data-moving-sheet aria-label={`打开全部 ${all.length} 条记录的索引`}>
+        <div class="sheet-meta micro"><span>PERSONAL INDEX</span><span>{String(all.length).padStart(2, '0')} FILES</span></div>
+        <strong class="sheet-title">OPEN<br />ARCHIVE</strong>
+        {all.length ? <ol>{all.slice(0, 6).map(p => <li>{p.data.title}</li>)}</ol> : <div class="sheet-categories"><span>WRITING <small>文章</small></span><span>PROJECTS <small>项目</small></span><span>NOTES TO SELF <small>随记</small></span></div>}
+        <div class="sheet-bottom micro"><span>文章 · 项目 · 随记</span><span>CONTENTS</span></div>
+      </a>
+    </section>
+    {all.length > 0 && <><section class="home-records" aria-labelledby="records-title">
+      <div class="section-bar micro"><h2 id="records-title">01 / RECENT RECORDS</h2><span>最近留下的东西</span><a href="/archive/">全部索引</a></div>
+      <div class="record-columns">
+        <div class="writing-column">
+          <div class="column-label micro"><span>WRITING / 文章</span><span>{String(writings.length).padStart(2, '0')}</span></div>
+          {featured ? <article class="featured-writing"><div class="micro">{dateLabel(featured.data.published)} / {featured.data.category || 'WRITING'}</div><h3><a href={href(featured)}>{featured.data.title}</a></h3><p>{featured.data.description}</p><a class="text-link micro" href={href(featured)}>打开文章</a></article> : <p class="empty-copy">第一篇文章，即将开始。</p>}
+          <div class="compact-list">{writings.slice(1, 4).map(p => <a href={href(p)}><span>{p.data.title}</span><span class="compact-read">阅读</span></a>)}</div>
+        </div>
+        <div class="working-column">
+          <div class="column-label micro"><span>PROJECTS / 项目</span><span>{String(projects.length).padStart(2, '0')}</span></div>
+          {project ? <article class="project-feature">{project.data.image && <img src={project.data.image} alt={project.data.imageAlt || project.data.title} loading="lazy" width="800" height="500" />}<h3><a href={href(project)}>{project.data.title}</a></h3><p>{project.data.description}</p></article> : <div class="empty-project"><span class="empty-cross" aria-hidden="true">＋</span><h3>Work in<br />progress.</h3><p>项目记录还在整理。<br />完成的作品与未完成的尝试，都会放在这里。</p><span class="micro">THIS SPACE IS OPEN.</span></div>}
+        </div>
+        <div class="notes-column">
+          <div class="column-label micro"><span>NOTES / 随记</span><span>{String(notes.length).padStart(2, '0')}</span></div>
+          {latestNote ? <article class="note-feature"><span class="micro">{dateLabel(latestNote.data.published)}</span><h3><a href={href(latestNote)}>{latestNote.data.title}</a></h3><p>{latestNote.data.description}</p><a href={href(latestNote)} class="micro text-link">继续读</a></article> : <div class="note-feature"><span class="micro">AN OPEN PAGE</span><p class="note-hand">想法不必<br />等到完整，<br />才值得记下。</p><p>这个栏目留给日常的观察、片段与备忘。暂时还没有公开随记。</p></div>}
+          <div class="about-fragment"><span class="micro">BEHIND THE ARCHIVE</span><h3>Behind<br />the records.</h3><a href="/about/" class="micro text-link">关于这个站点</a></div>
+        </div>
+      </div>
+    </section>
+    <section class="home-index" aria-labelledby="index-title">
+      <div class="section-bar micro"><h2 id="index-title">02 / THE INDEX</h2><span>按时间，慢慢累积</span><a href="/archive/">浏览与搜索</a></div>
+      {all.slice(0, 6).map((entry, index) => <EntryRow entry={entry} index={index} />)}
+    </section></>}
+    {!all.length && <section class="archive-start" aria-labelledby="start-title">
+      <div class="section-bar micro"><span>01 / A PLACE TO BEGIN</span><span>文章 · 项目 · 随记</span></div>
+      <div class="start-grid"><h2 id="start-title">第一份记录，<br />还没写下。</h2><div><p>这里会慢慢放进我的文章、项目和日常记录。<br />现在，先留一张空白的纸。</p><div class="start-links micro"><a href="/about/">关于这个站点</a><a href="/archive/">打开索引</a></div></div></div>
+    </section>}
+  </main>
+</Base>
