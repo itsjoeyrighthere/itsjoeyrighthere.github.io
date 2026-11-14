@@ -1,0 +1,40 @@
+---
+import Base from '../../../layouts/Base.astro';
+import articles from '../../../data/duan/articles.json';
+export function getStaticPaths() {
+  return articles.map((article, index) => ({ params: { part: article.id }, props: { article, newer: articles[index-1], older: articles[index+1] } }));
+}
+const { article, newer, older } = Astro.props;
+---
+<Base title={article.title} description={`段永平网易博客 · ${article.date}`} light article lang="zh-CN" published={new Date(`${article.date}T${article.time}+08:00`)}>
+  <main id="main" class="post-page" data-pagefind-body>
+    <div class="reading-top micro" data-pagefind-ignore><a href="/posts/duan-yongping-blog/">← 段永平网易博客</a><span>文章 / 段永平</span></div>
+    <header class="post-header">
+      <div class="post-dates micro"><time datetime={`${article.date}T${article.time}+08:00`}>{article.date}</time></div>
+      <h1 data-pagefind-meta="title">{article.title}</h1>
+    </header>
+    <div class="reading-grid">
+      <aside class="reading-margin" data-pagefind-ignore>
+        <div class="micro">IN THIS RECORD</div>
+        <nav aria-label="文章目录"><ol><li><a href="#body">正文</a></li>{article.comments.length > 0 && <li><a href="#comments">评论与交流</a></li>}<li><a href="/posts/duan-yongping-blog/">所有文章</a></li></ol></nav>
+      </aside>
+      <article class="prose" id="body">
+        {article.body.length === 0 && <p><a href={`/library/duan/netease-with-comments.pdf#page=${article.sourcePage}`}>查看原文内容 ↗</a></p>}
+        {article.body.map(paragraph => <p>{paragraph}</p>)}
+        {article.comments.length > 0 && <section id="comments"><h2>评论与交流</h2>{article.comments.map(comment => <p class:list={['comment', { 'author-comment': /^段永平\s*(?:→|\()/.test(comment) }]}>{comment}</p>)}</section>}
+        <footer data-pagefind-ignore><p class="source">原载段永平网易博客，资料由 @追求真知ing 整理。评论保留各发言者署名，转载内容沿用原文标注。<a href="/posts/duan-yongping-blog/#来源">来源</a></p></footer>
+        <div class="end-mark" aria-label="文章结束">■</div>
+      </article>
+    </div>
+    <nav class="post-pagination" aria-label="相邻文章" data-pagefind-ignore>
+      <div>{newer && <a href={`/library/duan/${newer.id}/`}><span class="micro">上一篇</span><strong>{newer.title}</strong></a>}</div>
+      <div>{older && <a href={`/library/duan/${older.id}/`}><span class="micro">下一篇</span><strong>{older.title}</strong></a>}</div>
+    </nav>
+  </main>
+</Base>
+<style>
+#comments { margin-top: 4rem; scroll-margin-top: 2rem; }
+.comment { border-bottom: 1px solid var(--line, #ddd); padding-bottom: 1.2rem; }
+.author-comment { border-left: 2px solid currentColor; padding-left: 1rem; }
+.source { font-size: .8em; opacity: .7; margin-top: 3rem; }
+</style>
