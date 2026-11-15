@@ -35,6 +35,8 @@ export function initArchive(signal: AbortSignal) {
   sync();
 
   const message = root.querySelector<HTMLElement>('[data-search-message]')!;
+  const search = root.querySelector<HTMLElement>('#full-search')!;
+  let searchUI: { destroy(): void } | undefined;
   if (import.meta.env.DEV) {
     message.textContent = '全文搜索在生产构建后可用；请运行 npm run build，再运行 npm run preview。';
     return;
@@ -47,12 +49,17 @@ export function initArchive(signal: AbortSignal) {
   script.src = '/pagefind/pagefind-ui.js';
   script.onload = () => {
     if (signal.aborted) return;
-    const UI = (window as Window & { PagefindUI?: new (options: object) => unknown }).PagefindUI;
+    const UI = (window as Window & { PagefindUI?: new (options: object) => { destroy(): void } }).PagefindUI;
     if (!UI) { message.textContent = '全文搜索暂时不可用，可以使用上方标题搜索。'; return; }
-    new UI({ element: '#full-search', showSubResults: true, showImages: false, translations: { placeholder: '搜索全部正文…', zero_results: '没有找到「[SEARCH_TERM]」', clear_search: '清除', searching: '搜索中…', load_more: '显示更多', many_results: '找到 [COUNT] 条结果', one_result: '找到 1 条结果' } });
+    searchUI = new UI({ element: search, showSubResults: true, showImages: false, translations: { placeholder: '搜索全部正文…', zero_results: '没有找到「[SEARCH_TERM]」', clear_search: '清除', searching: '搜索中…', load_more: '显示更多', many_results: '找到 [COUNT] 条结果', one_result: '找到 1 条结果' } });
     message.hidden = true;
   };
   script.onerror = () => { if (signal.aborted) return; message.textContent = '全文搜索暂时不可用，可以使用上方标题搜索。'; };
   document.body.appendChild(script);
-  signal.addEventListener('abort', () => { stylesheet.remove(); script.remove(); }, { once: true });
+  signal.addEventListener('abort', () => {
+    searchUI?.destroy();
+    search.replaceChildren();
+    stylesheet.remove();
+    script.remove();
+  }, { once: true });
 }
