@@ -1,14 +1,9 @@
-import { themes } from '../config/themes';
+import { applyThemeToDocument, themeRegistry } from '../config/themes';
 import { initArchive } from './archive';
 
 let lifecycle: AbortController | undefined;
 function applyTheme(id: string) {
-  const theme = themes.find(theme => theme.id === id) ?? themes[0];
-  document.documentElement.dataset.theme = theme.id;
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme.background);
-  document.querySelectorAll<HTMLButtonElement>('[data-theme-option]').forEach(button => {
-    button.setAttribute('aria-pressed', String(button.dataset.themeOption === theme.id));
-  });
+  return applyThemeToDocument(document, id, themeRegistry);
 }
 function initialisePage() {
   lifecycle?.abort();
@@ -19,12 +14,12 @@ function initialisePage() {
   picker?.querySelectorAll<HTMLButtonElement>('[data-theme-option]').forEach(button => {
     button.addEventListener('click', () => {
       const id = button.dataset.themeOption!;
-      applyTheme(id);
-      try { localStorage.setItem('joey-theme', id); } catch { /* Themes still work when storage is unavailable. */ }
+      const selected = applyTheme(id);
+      try { localStorage.setItem('joey-theme', selected); } catch { /* Themes still work when storage is unavailable. */ }
     }, { signal });
   });
   window.addEventListener('storage', event => {
-    if (event.key === 'joey-theme') applyTheme(event.newValue || 'paper');
+    if (event.key === 'joey-theme' || event.key === null) applyTheme(event.newValue || 'paper');
   }, { signal });
 
   const sheet = document.querySelector<HTMLElement>('[data-moving-sheet]');
@@ -41,15 +36,14 @@ function initialisePage() {
     update();
   }
   initArchive(signal);
+
 }
 
 // Preserve the chosen palette before Astro swaps the document, preventing a light flash.
 document.addEventListener('astro:before-swap', event => {
   lifecycle?.abort();
   const id = document.documentElement.dataset.theme || 'paper';
-  event.newDocument.documentElement.dataset.theme = id;
   event.newDocument.documentElement.classList.add('js');
-  const theme = themes.find(theme => theme.id === id) ?? themes[0];
-  event.newDocument.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme.background);
+  applyThemeToDocument(event.newDocument, id, themeRegistry);
 });
 document.addEventListener('astro:page-load', initialisePage);

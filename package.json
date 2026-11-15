@@ -10,6 +10,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "check": "astro check",
+    "test:themes": "node --test tests/themes.test.mjs",
     "build": "astro build && node scripts/build-search.js",
     "preview": "astro preview",
     "new-post": "node scripts/new-post.js"

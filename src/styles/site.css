@@ -1457,3 +1457,35 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible {
 @media (max-width:700px) {
   .wordmark { width:145px; font-size:19px; letter-spacing:-.6px; }
 }
+
+/* New themes use the same semantic surfaces on every route. Legacy themes keep their palettes. */
+:root[data-art-theme="true"] ::selection { background:var(--selection-bg); color:var(--selection-ink); }
+:root[data-art-theme="true"] .index-sheet {
+  background:var(--material-bg); color:var(--material-ink);
+  border-color:var(--material-ink); box-shadow:8px 12px 0 var(--underlay);
+}
+:root[data-art-theme="true"] .index-sheet:hover { box-shadow:13px 19px 0 var(--underlay); }
+:root[data-art-theme="true"] .index-sheet:before { background:var(--material-ink); border-color:var(--material-ink); }
+:root[data-art-theme="true"] .index-sheet :focus-visible { outline-color:var(--material-ink); }
+:root[data-art-theme="true"] .filter-group button[aria-pressed="true"] { background:var(--action-bg); color:var(--action-ink); border-color:var(--action-bg); }
+:root[data-art-theme="true"] .empty-project { background:none; }
+:root[data-art-theme="true"] .entry-row:hover { background:color-mix(in srgb,var(--ink) 6%,transparent); }
+:root[data-art-theme="true"] .note-feature { border:1px solid var(--line); }
+:root[data-art-theme="true"] .prose pre { color:var(--code-ink); }
+:root[data-art-theme="true"] .prose th,:root[data-art-theme="true"] .prose td { border-color:var(--table-line); }
+:root[data-art-theme="true"] .theme-options button[aria-pressed="true"] { border-color:var(--ink); }
+:root[data-art-theme="true"] .theme-options button:hover { border-color:var(--ink); }
+:root[data-art-theme="true"] .theme-selected { color:var(--ink); }
+:root[data-art-theme="true"] .prose :not(pre)>code { color:var(--reading-ink); }
+.theme-options { max-width:100%; }
+.theme-options button { min-height:44px; min-width:44px; }
+@media (min-width:901px) { .appearance-settings { grid-template-columns:1fr; } .appearance-hint { justify-self:start; } }
+@media (prefers-reduced-motion:no-preference) {
+  :root[data-art-theme="true"] body { transition:background-color .3s,color .3s; }
+}
+:root[data-art-theme="true"] body { background:var(--surface-bg); color:var(--surface-ink); }
+@media print {
+  :root[data-art-theme="true"] body,:root[data-art-theme="true"] body.paper-page { background:#fff; color:#000; }
+  :root[data-art-theme="true"] .prose a { color:#000; }
+  :root[data-art-theme="true"] .prose pre { background:#eee; color:#000; }
+}
