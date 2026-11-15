@@ -10,10 +10,12 @@
     "dev": "astro dev",
     "start": "astro dev",
     "check": "astro check",
+    "test": "node --test tests/*.test.mjs && python3 -B -m unittest discover -s tests -p 'test_*.py'",
     "test:themes": "node --test tests/themes.test.mjs",
     "build": "astro build && node scripts/build-search.js",
     "preview": "astro preview",
-    "new-post": "node scripts/new-post.js"
+    "new-post": "node scripts/new-post.js",
+    "new": "node scripts/new-post.js"
   },
   "dependencies": {
     "astro": "7.4.12",

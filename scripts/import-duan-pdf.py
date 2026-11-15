@@ -12,7 +12,7 @@ from pypdf import PdfReader
 logging.getLogger('pypdf').setLevel(logging.ERROR)
 root = Path(__file__).resolve().parents[1]
 source = Path(sys.argv[1])
-out = root / 'src/data/duan'
+out = root / 'content/library/duan/source-pages'
 out.mkdir(parents=True, exist_ok=True)
 r = PdfReader(source)
 bookmarks = []
@@ -46,6 +46,9 @@ for previous in out.glob('[0-9]*.json'):
         previous.unlink()
 meta = {'source':source.name, 'sha256':hashlib.sha256(source.read_bytes()).hexdigest(), 'pageCount':len(pages), 'chunkSize':size, 'chunks':(len(pages)+size-1)//size, 'bookmarks':bookmarks, 'characters':sum(map(len,pages)), 'emptyPages':[i+1 for i,p in enumerate(pages) if not p.strip()]}
 (out / 'manifest.json').write_text(json.dumps(meta, ensure_ascii=False, indent=2))
-shutil.copyfile(source, root / 'public/library/duan/netease-with-comments.pdf')
+backup = root / 'static/library/duan/netease-with-comments.pdf'
+backup.parent.mkdir(parents=True, exist_ok=True)
+if source.resolve() != backup.resolve():
+    shutil.copyfile(source, backup)
 print(json.dumps({k:v for k,v in meta.items() if k!='bookmarks'},ensure_ascii=False),flush=True)
 print('Bookmarks:',len(bookmarks))

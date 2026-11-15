@@ -1,6 +1,6 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import articles from '../../../data/duan/articles.json';
+import articles from '../../../../content/library/duan/articles.json';
 export function getStaticPaths() {
   return articles.map((article, index) => ({ params: { part: article.id }, props: { article, newer: articles[index-1], older: articles[index+1] } }));
 }

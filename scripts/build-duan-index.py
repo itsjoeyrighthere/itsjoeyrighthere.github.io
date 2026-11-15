@@ -3,10 +3,12 @@ import json
 import re
 from pathlib import Path
 root = Path(__file__).resolve().parents[1]
-m = json.loads((root/'src/data/duan/manifest.json').read_text())
+source_pages = root / 'content/library/duan/source-pages'
+output = root / 'content/library/duan'
+m = json.loads((source_pages / 'manifest.json').read_text())
 pages=[]
 for number in range(1, m['chunks'] + 1):
-    p = root/'src/data/duan'/f'{number:03}.json'
+    p = source_pages / f'{number:03}.json'
     chunk = json.loads(p.read_text())
     expected_start = (number - 1) * m['chunkSize'] + 1
     expected_count = min(m['chunkSize'], m['pageCount'] - expected_start + 1)
@@ -83,7 +85,7 @@ for i,a in enumerate(starts):
     sections=re.split(r'\n评论\s*\n', '\n'+raw, maxsplit=1)
     article={'id':str(i+1),'title':a['title'],'date':a['date'],'time':a['time'],'sourcePage':a['sourcePage'],'body':paragraphs(sections[0]),'comments':paragraphs(sections[1],True) if len(sections)>1 else []}
     articles.append(article)
-(root/'src/data/duan/articles.json').write_text(json.dumps(articles,ensure_ascii=False))
+(output / 'articles.json').write_text(json.dumps(articles,ensure_ascii=False))
 index='''---
 title: "段永平网易博客"
 published: 2026-11-14
@@ -112,5 +114,5 @@ index+='''
 
 [带评论合集](/library/duan/netease-with-comments.pdf) · [2006–2018 合集](/library/duan/netease-2006-2018.pdf) · [更多资料](https://github.com/dorightyang/duan)
 '''
-(root/'src/content/posts/duan-yongping-blog.md').write_text(index)
+(root/'content/posts/duan-yongping-blog.md').write_text(index)
 print(f'Created {len(articles)} articles, {sum(len(a["comments"]) for a in articles)} comment paragraphs')
