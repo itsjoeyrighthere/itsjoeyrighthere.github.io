@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import HeroName from '../components/HeroName.astro';
 import EntryRow from '../components/EntryRow.astro';
 import { entries, dateLabel, href } from '../utils/content';
 const all = await entries();
@@ -14,7 +15,7 @@ const project = projects[0];
   <main id="main">
     <section class="hero" aria-label="Joey 的个人档案">
       <div class="hero-caption micro"><span>A PERSONAL RECORD, ALWAYS IN PROGRESS.</span><span>{all.length} DOCUMENTS / {all[0] ? dateLabel(all[0].data.updated ?? all[0].data.published) : 'NO ENTRIES YET'}</span></div>
-      <h1 class="hero-name">Joey<span class="hero-dot">.</span></h1>
+      <HeroName />
       <div class="hero-baseline"><p>一些想法，一些尝试。<br />把正在发生的过程留在这里。</p><span class="hero-category micro">WRITING<br />PROJECTS<br />NOTES TO SELF</span><span class="hero-scroll micro">向下翻阅<br /></span></div>
       <a class="index-sheet" href="/archive/" data-moving-sheet aria-label={`打开全部 ${all.length} 条记录的索引`}>
         <div class="sheet-meta micro"><span>PERSONAL INDEX</span><span>{String(all.length).padStart(2, '0')} FILES</span></div>

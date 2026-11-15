@@ -75,6 +75,7 @@ export function applyThemeToDocument(doc: Document, id: string, registry: typeof
   doc.querySelectorAll('[data-theme-option]').forEach(button => {
     button.setAttribute('aria-pressed', String(button.getAttribute('data-theme-option') === theme.id));
   });
+  doc.querySelectorAll('[data-theme-current]').forEach(label => { label.textContent = theme.name; });
   return theme.id;
 }
 

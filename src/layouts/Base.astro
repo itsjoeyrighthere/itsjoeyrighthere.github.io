@@ -52,11 +52,12 @@ const current = Astro.url.pathname;
         <a href="/about/" aria-current={current === '/about/' ? 'page' : undefined}>ABOUT / 关于</a>
         <a href="/rss.xml">RSS</a>
       </nav>
+      <ThemePicker />
     </header>
     <slot />
     <footer class="site-footer" data-pagefind-ignore>
       <div class="footer-identity"><span class="micro">AN OPEN PERSONAL SPACE</span><p>持续整理，保持好奇。</p></div>
-      <ThemePicker />
+      <button class="footer-palette-link" type="button" data-theme-open aria-expanded="false" aria-controls="theme-panel">网站配色 / <span data-theme-current>纸白钴蓝</span></button>
       <div class="footer-meta micro"><span>PERSONAL ARCHIVE</span><div><a href="/about/">关于本站</a><a href="/rss.xml">RSS</a><a href="#top">回到顶部</a></div><span>A WORK IN PROGRESS</span></div>
     </footer>
     <script>import '../utils/site';</script>

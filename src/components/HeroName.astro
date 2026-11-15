@@ -1,0 +1,11 @@
+<!--
+Character beats, fixed camera; retain the original word and layout.
+Rest: eyes rise above the o, ~30% of its font size wide; no entrance or whole-word motion.
+Attention: pointer inside the hero moves pupils at most 17% of eye width; input-driven only.
+Hello: wink 320ms + dot 420ms; italic signature lands 180ms, holds to 640ms,
+then flies on a cubic arc until 1600ms; one fine trail follows and fades.
+Idle: at most two brief blinks per visit/attention, 4–7s apart; offscreen/hidden pages pause.
+Reduced motion: static eyes, greeting on activation. No JS: plain Joey.
+-->
+<h1 class="hero-name" aria-label="Joey.">J<span class="hero-o" data-hero-o>o<button class="hero-eyes" type="button" data-hero-character aria-label="和 Joey 打个招呼"><span class="hero-eye" data-eye="left" aria-hidden="true"><span class="hero-pupil"></span></span><span class="hero-eye" data-eye="right" aria-hidden="true"><span class="hero-pupil"></span></span></button><span class="hero-salute" data-hero-salute aria-hidden="true"><svg class="hero-flight-trail" width="1" height="1" focusable="false"><path data-hero-trail pathLength="1" /></svg><span class="hero-hello" data-hero-hello>hey.</span></span></span>ey<span class="hero-dot" data-hero-dot>.</span></h1>
+<span class="hero-character-status" role="status" data-hero-character-status></span>

@@ -1,5 +1,7 @@
 import { applyThemeToDocument, themeRegistry } from '../config/themes';
 import { initArchive } from './archive';
+import { initAppearance } from './appearance';
+import { initHeroCharacter } from './hero-character';
 
 let lifecycle: AbortController | undefined;
 function applyTheme(id: string) {
@@ -10,17 +12,8 @@ function initialisePage() {
   lifecycle = new AbortController();
   const { signal } = lifecycle;
   applyTheme(document.documentElement.dataset.theme || 'paper');
-  const picker = document.querySelector<HTMLElement>('[data-theme-picker]');
-  picker?.querySelectorAll<HTMLButtonElement>('[data-theme-option]').forEach(button => {
-    button.addEventListener('click', () => {
-      const id = button.dataset.themeOption!;
-      const selected = applyTheme(id);
-      try { localStorage.setItem('joey-theme', selected); } catch { /* Themes still work when storage is unavailable. */ }
-    }, { signal });
-  });
-  window.addEventListener('storage', event => {
-    if (event.key === 'joey-theme' || event.key === null) applyTheme(event.newValue || 'paper');
-  }, { signal });
+  initAppearance(signal);
+  initHeroCharacter(signal);
 
   const sheet = document.querySelector<HTMLElement>('[data-moving-sheet]');
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
