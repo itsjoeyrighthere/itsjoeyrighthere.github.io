@@ -76,4 +76,4 @@ GitHub 仓库 Settings → Pages → Source 选择 **GitHub Actions**。提交�
 
 布局在 `src/layouts/Base.astro`，样式在 `src/styles/site.css`，内容字段在 `src/content.config.ts`。网站支持七种配色，选择保存在访客自己的浏览器；站内导航使用 Astro ClientRouter，减少动画偏好下关闭过渡。没有后台、数据库或运行时服务。
 
-六篇旧 AI 示例保留为草稿，可参考格式；原有头像素材保留在 `src/assets/images/`。原模板版权声明见 LICENSE。
+新文章格式见 `archetypes/post.md`。原有头像素材保留在 `src/assets/images/`。原模板版权声明见 LICENSE。
