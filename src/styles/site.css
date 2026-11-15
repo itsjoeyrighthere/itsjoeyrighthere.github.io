@@ -1489,3 +1489,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible {
   :root[data-art-theme="true"] .prose a { color:#000; }
   :root[data-art-theme="true"] .prose pre { background:#eee; color:#000; }
 }
+
+@media(max-width:380px) {
+  .site-header { display:grid; grid-template-columns:minmax(20px,1fr) auto auto; }
+  .site-header .wordmark { grid-column:1/-1; width:auto; border-right:0; border-bottom:1px dashed var(--line); padding-bottom:8px; }
+  .site-header .header-rules { grid-column:1; grid-row:2; min-height:44px; }
+  .site-header .site-nav { grid-column:2; grid-row:2; margin-left:0; }
+  .site-header .appearance-control { grid-column:3; grid-row:2; margin-left:0; }
+}
