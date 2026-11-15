@@ -5,8 +5,16 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 m = json.loads((root/'src/data/duan/manifest.json').read_text())
 pages=[]
-for p in sorted((root/'src/data/duan').glob('[0-9]*.json')):
-    pages += json.loads(p.read_text())['pages']
+for number in range(1, m['chunks'] + 1):
+    p = root/'src/data/duan'/f'{number:03}.json'
+    chunk = json.loads(p.read_text())
+    expected_start = (number - 1) * m['chunkSize'] + 1
+    expected_count = min(m['chunkSize'], m['pageCount'] - expected_start + 1)
+    if chunk['start'] != expected_start or len(chunk['pages']) != expected_count:
+        raise ValueError(f'Invalid page range in {p.name}')
+    pages += chunk['pages']
+if len(pages) != m['pageCount']:
+    raise ValueError('Extracted page count does not match manifest')
 clean=[]
 def compact(value):
     return re.sub(r'\s+', '', value).upper().replace('⋯⋯', '……')

@@ -36,8 +36,14 @@ for i, page in enumerate(r.pages):
 if any(not p.strip() for p in pages):
     print('Pages without extractable text:', [i+1 for i,p in enumerate(pages) if not p.strip()], flush=True)
 size = 50
+chunk_files = set()
 for start in range(0, len(pages), size):
-    (out / f'{start//size+1:03}.json').write_text(json.dumps({'start':start+1, 'pages':pages[start:start+size]}, ensure_ascii=False))
+    target = out / f'{start//size+1:03}.json'
+    target.write_text(json.dumps({'start':start+1, 'pages':pages[start:start+size]}, ensure_ascii=False))
+    chunk_files.add(target)
+for previous in out.glob('[0-9]*.json'):
+    if previous.stem.isdigit() and previous not in chunk_files:
+        previous.unlink()
 meta = {'source':source.name, 'sha256':hashlib.sha256(source.read_bytes()).hexdigest(), 'pageCount':len(pages), 'chunkSize':size, 'chunks':(len(pages)+size-1)//size, 'bookmarks':bookmarks, 'characters':sum(map(len,pages)), 'emptyPages':[i+1 for i,p in enumerate(pages) if not p.strip()]}
 (out / 'manifest.json').write_text(json.dumps(meta, ensure_ascii=False, indent=2))
 shutil.copyfile(source, root / 'public/library/duan/netease-with-comments.pdf')
